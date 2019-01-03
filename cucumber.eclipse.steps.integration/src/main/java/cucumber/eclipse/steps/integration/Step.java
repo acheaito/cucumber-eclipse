@@ -23,8 +23,8 @@ public class Step {
 		return text;
 	}
 	public void setText(String text) {
-		this.text = text;
-		this.compiledText = Pattern.compile(text);
+		this.text = translateParamTypes(text);
+		this.compiledText = Pattern.compile(this.text);
 	}
 	public IResource getSource() {
 		return source;
@@ -97,6 +97,16 @@ public class Step {
 		//For Steps From External-ClassPath JAR
 		else		
 			return "Step [text=" + text + ", source=" + sourceName+", package="+ packageName +"]";
+	}
+	
+	private String translateParamTypes(String annotationText) {
+		return annotationText
+				.replace("{int}","(\\d+)")
+				.replace("{string}","(\\w.*)")
+				.replace("{float}", "(\\d+\\.\\d+)")
+				.replace("{word}", "(\\w+\\b)")
+				.replaceAll("[{].*[}]", "(.*)");
+		 
 	}
 	
 }
